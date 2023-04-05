@@ -1,47 +1,82 @@
-from typing import List, Dict
+import os
+import json
 from enum import Enum
+from typing import TypedDict
 
+import location
 from common import Check, SkillCheck
 from ancient import Ancient
 from investigator import Investigator
 from monster import Monster
+
 
 class MonsterLocation(Enum):
     NORMAL = 1
     outskirts = 2
     TERROR = 3
 
+
+class JsonBoard(TypedDict):
+    arkham: dict[str, location.JsonBoardLocation]
+    outer_worlds: list[str]
+
+
 class Board:
-    AVAILABLE_GATE_TOKENS : int = 49
+    GATE_TOKENS: int = 49
 
     def __init__(self) -> None:
-        self._open_gates: int = 0
-        self._elder_signs: int = 0
-        self._terror_level : int = 0
-        self._ancient : Ancient | None = None
-        self._investigators : List[Investigator] = []
-        self._monsters : Dict[str, List[Monster]] = {"arkham":[], "sky":[], "outskirts":[]}
+        self._terror_level: int = 0
+        self._ancient: Ancient | None = None
+        self._sky: list[Monster] = []
+        self._outskirts: list[Monster] = []
+        self._arkham_locations: list[location.ArkhamLocation] = []
+        self._outer_worlds: list[location.OuterWorldLocation] = []
 
-    @property
+        with open(os.path.join("data", "board.json"), "r") as j:
+            data: JsonBoard = json.load(j)
+            for street_name, info in data["arkham"].items():
+                street = location.ArkhamLocation(street_name)
+                for place_name in info["places"]:
+                    place = location.ArkhamLocation(place_name)
+                    # TODO: add links to place->street
+                    # TODO: add links to street->places
+                    self._arkham_locations.append(place)
+                # TODO: add link street->street
+                self._arkham_locations.append(street)
+            for world_name in data["outer_worlds"]:
+                self._outer_worlds.append(
+                    location.OuterWorldLocation(world_name))
+
     def num_investigators(self) -> int:
-        return len(self._investigators)
+        n = 0
+        for a in self._arkham_locations + self._outer_worlds:
+            n += a.num_investigators()
+        return n
 
-    @property
-    def num_investigators(self) -> int:
-        return len(self._investigators)
+    def open_gates(self) -> int:
+        open = 0
+        for a in self._arkham_locations:
+            open += 1 if a.open_gate() else 0
+        return open
 
-    @property
-    def num_portals(self) -> int:
-        return self._open_gates
+    def gate_thropies(self) -> int:
+        thropies = 0
+        for a in self._arkham_locations + self._outer_worlds:
+            for i in a.investigators():
+                thropies += i.gate_thropies()
+        return thropies
+
+    def elder_signs(self) -> int:
+        signs = 0
+        for a in self._arkham_locations:
+            signs += 1 if a.elder_sign() else 0
+        return signs
 
     def victory(self) -> bool:
-        if self._open_gates == 0:
-            total_thropies = 0
-            for i in self._investigators:
-                total_thropies += i.gate_thropies
-                if total_thropies >= self.num_investigators():
-                    return True
-        elif self._elder_signs >= 6:
+        if self.open_gates() == 0:
+            total_thropies = self.gate_thropies()
+            return total_thropies >= self.num_investigators()
+        elif self.elder_signs() >= 6:
             return True
         else:
             return False
@@ -50,40 +85,42 @@ class Board:
         if self._ancient.doom_track_full():
             return True
         else:
-            if self.num_investigators() == 1 or self.num_investigators() == 2:
-                return self._open_gates == 8
-            elif self.num_investigators() == 3 or self.num_investigators() == 4:
-                return self._open_gates == 7
-            elif self.num_investigators() == 5 or self.num_investigators() == 6:
-                return self._open_gates == 6
-            elif self.num_investigators() == 7 or self.num_investigators() == 8:
-                return self._open_gates == 5
+            num_investigators = self.num_investigators()
+            open_gates = self.open_gates()
+            if num_investigators == 1 or num_investigators == 2:
+                return open_gates == 8
+            elif num_investigators == 3 or num_investigators == 4:
+                return open_gates == 7
+            elif num_investigators == 5 or num_investigators == 6:
+                return open_gates == 6
+            elif num_investigators == 7 or num_investigators == 8:
+                return open_gates == 5
             else:
-                return Board.AVAILABLE_GATE_TOKENS == 0
+                return Board.GATE_TOKENS == (open_gates + self.gate_thropies())
 
-    def next_monster_location(self) -> MonsterLocation:
-        if self._terror_level < 10:
-            return MonsterLocation.NORMAL
-        else:
-            active_monsters = len(self._monsters["arkham"]) + len(self._monsters["sky"])
-            if active_monsters < self.num_investigators + 3:
-                return MonsterLocation.NORMAL
-            elif active_monsters == self.num_investigators + 3:
-                return MonsterLocation.outskirts
-            elif len(self._monsters["outskirts"]) < 8 - self.num_investigators:
-                return MonsterLocation.outskirts
-            else:
-                return MonsterLocation.TERROR
+    # def next_monster_location(self) -> MonsterLocation:
+    #    if self._terror_level < 10:
+    #        return MonsterLocation.NORMAL
+    #    else:
+    #        active_monsters = len(self._monsters["arkham"]) + len(self._monsters["sky"])
+    #        if active_monsters < self.num_investigators + 3:
+    #            return MonsterLocation.NORMAL
+    #        elif active_monsters == self.num_investigators + 3:
+    #            return MonsterLocation.outskirts
+    #        elif len(self._monsters["outskirts"]) < 8 - self.num_investigators:
+    #            return MonsterLocation.outskirts
+    #        else:
+    #            return MonsterLocation.TERROR
 
-    def stores(self) -> Dict[str, bool]:
+    def stores(self) -> dict[str, bool]:
         return {
             "General Store": self._terror_level < 3,
             "Curiositie Shoppe": self._terror_level < 6,
             "Ye Old Magick Shoppe": self._terror_level < 9
         }
 
-    def encounter(self, investigator:Investigator, monster:Monster) -> Dict[SkillCheck, Check]:
-        data : Dict[SkillCheck, Check] = {
+    def encounter(self, investigator: Investigator, monster: Monster) -> dict[SkillCheck, Check]:
+        data: dict[SkillCheck, Check] = {
             SkillCheck.EVADE: Check(investigator.evade+monster.awareness, monster.evade_check),
             SkillCheck.HORROR: Check(investigator.horror+monster.horror_rating, monster.horror_check),
         }

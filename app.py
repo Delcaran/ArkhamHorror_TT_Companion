@@ -9,8 +9,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     locations = {}
-    with open(os.path.join("data", "board.json"), "r") as j:
-        locations = json.load(j)
+
     return render_template(
         "main.html",
         locations=locations

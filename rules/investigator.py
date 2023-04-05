@@ -131,31 +131,24 @@ class Investigator:
         self._lore = Skill(min=data["lore"]["min"], max=data["lore"]["max"])
         self._luck = Skill(min=data["luck"]["min"], max=data["luck"]["max"])
 
-    @property
     def evade(self) -> int:
         return self._sneak.get() + self._evade_bonus
 
-    @property
     def horror(self) -> int:
         return self._will.get() + self._horror_bonus
 
-    @property
     def combat(self) -> int:
         return self._fight.get() + self._combat_bonus
 
-    @property
     def spell(self) -> int:
         return self._lore.get() + self._spell_bonus
 
-    @property
     def gate_thropies(self) -> int:
         return self._gate_trophies
 
-    @property
     def alive(self) -> bool:
         return (self._stamina > 0) and (self._sanity > 0)
 
-    @property
     def score(self) -> int:
         return self._loans*-1 + self._elder_sign_played*-1 + self.gate_thropies + self._monster_trophies/3 + 1 if self.alive() else 0
 
