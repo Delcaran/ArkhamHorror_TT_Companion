@@ -1,13 +1,14 @@
 from typing import List, Dict
 from enum import Enum
 
-import ancient
-import investigator
-import monster
+from common import Check, SkillCheck
+from ancient import Ancient
+from investigator import Investigator
+from monster import Monster
 
 class MonsterLocation(Enum):
     NORMAL = 1
-    SUBURBS = 2
+    outskirts = 2
     TERROR = 3
 
 class Board:
@@ -17,9 +18,9 @@ class Board:
         self._open_gates: int = 0
         self._elder_signs: int = 0
         self._terror_level : int = 0
-        self._ancient : ancient.Ancient | None = None
-        self._investigators : List[investigator.Investigator] = []
-        self._monsters : Dict[str, List[monster.Monster]] = {"arkham":[], "sky":[], "suburbs":[]}
+        self._ancient : Ancient | None = None
+        self._investigators : List[Investigator] = []
+        self._monsters : Dict[str, List[Monster]] = {"arkham":[], "sky":[], "outskirts":[]}
 
     @property
     def num_investigators(self) -> int:
@@ -68,9 +69,9 @@ class Board:
             if active_monsters < self.num_investigators + 3:
                 return MonsterLocation.NORMAL
             elif active_monsters == self.num_investigators + 3:
-                return MonsterLocation.SUBURBS
-            elif len(self._monsters["suburbs"]) < 8 - self.num_investigators:
-                return MonsterLocation.SUBURBS
+                return MonsterLocation.outskirts
+            elif len(self._monsters["outskirts"]) < 8 - self.num_investigators:
+                return MonsterLocation.outskirts
             else:
                 return MonsterLocation.TERROR
 
@@ -79,4 +80,10 @@ class Board:
             "General Store": self._terror_level < 3,
             "Curiositie Shoppe": self._terror_level < 6,
             "Ye Old Magick Shoppe": self._terror_level < 9
+        }
+
+    def encounter(self, investigator:Investigator, monster:Monster) -> Dict[SkillCheck, Check]:
+        data : Dict[SkillCheck, Check] = {
+            SkillCheck.EVADE: Check(investigator.evade+monster.awareness, monster.evade_check),
+            SkillCheck.HORROR: Check(investigator.horror+monster.horror_rating, monster.horror_check),
         }

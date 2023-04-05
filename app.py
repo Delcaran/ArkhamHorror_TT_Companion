@@ -1,5 +1,5 @@
-import re
-from datetime import datetime
+import json
+import os
 
 from flask import Flask, render_template
 
@@ -8,14 +8,20 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Hello, Flask!"
-
-
-@app.route("/hello/")
-@app.route("/hello/<name>")
-def hello_there(name:str=None):
+    locations = {}
+    with open(os.path.join("data", "board.json"), "r") as j:
+        locations = json.load(j)
     return render_template(
-        "hello_there.html",
-        name=name,
-        date=datetime.now()
+        "main.html",
+        locations=locations
     )
+
+
+#@app.route("/monster/")
+#@app.route("/monster/<name>")
+#def hello_there(name:str=None):
+#    return render_template(
+#        "hello_there.html",
+#        name=name,
+#        date=datetime.now()
+#    )
