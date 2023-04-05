@@ -1,0 +1,80 @@
+{
+	"Amanda Sharpe": {
+		"occupation": "student",
+		"home": "bank of arkham",
+		"stamina": 5,
+		"sanity": 5,
+		"focus": 3,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	},
+	"Ashcan Pete": {
+		"occupation": "drifter",
+		"home": "river docks",
+		"stamina": 6,
+		"sanity": 4,
+		"focus": 1,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	},
+	"Bob Jenkins": {
+		"occupation": "Salesman",
+		"home": "general store",
+		"sanity": 4,
+		"stamina": 6,
+		"focus": 1,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	},
+	"Carolyn Fern": {
+		"occupation": "psychologist",
+		"home": "arkham asylum",
+		"sanity": 6,
+		"stamina": 4,
+		"focus": 2,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	},
+	"Darrell Simmons": {
+		"occupation": "photographer",
+		"home": "newspaper",
+		"sanity": 4,
+		"stamina": 6,
+		"focus": 2,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	},
+	"Dexter Drake": {
+		"occupation": "magician",
+		"home": "ye olde magick shoppe",
+		"sanity": 5,
+		"stamina": 5,
+		"focus": 2,
+		"speed": {"min":0, "max":0},
+		"sneak": {"min":0, "max":0},
+		"fight": {"min":0, "max":0},
+		"will": {"min":0, "max":0},
+		"lore": {"min":0, "max":0},
+		"luck": {"min":0, "max":0}
+	}
+}
