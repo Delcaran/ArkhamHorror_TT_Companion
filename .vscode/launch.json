@@ -5,18 +5,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Python: Flask",
+			"name": "Arkham Horror Companion",
 			"type": "python",
 			"request": "launch",
 			"module": "flask",
 			"env": {
-				"FLASK_APP": "app.py",
+				"FLASK_APP": "ahc",
 				"FLASK_DEBUG": "1"
 			},
 			"args": [
 				"run",
-				"--no-debugger",
-				"--no-reload"
+				"--no-debugger"
 			],
 			"jinja": true,
 			"justMyCode": true

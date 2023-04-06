@@ -2,12 +2,11 @@ import os
 import json
 from enum import Enum
 from typing import TypedDict
+from flask import Blueprint, render_template, current_app
 
-import location
-from common import Check, SkillCheck
-from ancient import Ancient
-from investigator import Investigator
-from monster import Monster
+from . import location, common, ancient, investigator, monster
+
+bp = Blueprint("board", __name__, url_prefix="/board")
 
 
 class MonsterLocation(Enum):
@@ -26,13 +25,13 @@ class Board:
 
     def __init__(self) -> None:
         self._terror_level: int = 0
-        self._ancient: Ancient | None = None
-        self._sky: list[Monster] = []
-        self._outskirts: list[Monster] = []
+        self._ancient: ancient.Ancient | None = None
+        self._sky: list[monster.Monster] = []
+        self._outskirts: list[monster.Monster] = []
         self._arkham_locations: list[location.ArkhamLocation] = []
         self._outer_worlds: list[location.OuterWorldLocation] = []
 
-        with open(os.path.join("data", "board.json"), "r") as j:
+        with open(os.path.join(current_app.config["DATA_PATH"], "board.json"), "r") as j:
             data: JsonBoard = json.load(j)
             for street_name, info in data["arkham"].items():
                 street = location.ArkhamLocation(street_name)
@@ -46,6 +45,12 @@ class Board:
             for world_name in data["outer_worlds"]:
                 self._outer_worlds.append(
                     location.OuterWorldLocation(world_name))
+
+    def arkham_locations(self) -> list[location.ArkhamLocation]:
+        return self._arkham_locations
+
+    def outer_worlds(self) -> list[location.OuterWorldLocation]:
+        return self._outer_worlds
 
     def num_investigators(self) -> int:
         n = 0
@@ -100,17 +105,17 @@ class Board:
 
     # def next_monster_location(self) -> MonsterLocation:
     #    if self._terror_level < 10:
-    #        return MonsterLocation.NORMAL
+    #        return MonsterNORMAL
     #    else:
     #        active_monsters = len(self._monsters["arkham"]) + len(self._monsters["sky"])
     #        if active_monsters < self.num_investigators + 3:
-    #            return MonsterLocation.NORMAL
+    #            return MonsterNORMAL
     #        elif active_monsters == self.num_investigators + 3:
-    #            return MonsterLocation.outskirts
+    #            return Monsteroutskirts
     #        elif len(self._monsters["outskirts"]) < 8 - self.num_investigators:
-    #            return MonsterLocation.outskirts
+    #            return Monsteroutskirts
     #        else:
-    #            return MonsterLocation.TERROR
+    #            return MonsterTERROR
 
     def stores(self) -> dict[str, bool]:
         return {
@@ -119,8 +124,17 @@ class Board:
             "Ye Old Magick Shoppe": self._terror_level < 9
         }
 
-    def encounter(self, investigator: Investigator, monster: Monster) -> dict[SkillCheck, Check]:
-        data: dict[SkillCheck, Check] = {
-            SkillCheck.EVADE: Check(investigator.evade+monster.awareness, monster.evade_check),
-            SkillCheck.HORROR: Check(investigator.horror+monster.horror_rating, monster.horror_check),
+    def encounter(self, investigator: investigator.Investigator, monster: monster.Monster) -> dict[common.SkillCheck, common.Check]:
+        data: dict[common.SkillCheck, common.Check] = {
+            common.SkillCheck.EVADE: common.Check(investigator.evade+monster.awareness, monster.evade_check),
+            common.SkillCheck.HORROR: common.Check(investigator.horror+monster.horror_rating, monster.horror_check),
         }
+
+@bp.route("/", methods=["GET"])
+def board():
+    gameboard = Board()
+    return render_template(
+        "board/main.html",
+        arkham_locations=gameboard.arkham_locations(),
+        outer_worlds=gameboard.outer_worlds()
+    )

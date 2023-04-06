@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Game Board{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="fixed">
+		<h1>Locations</h1>
+		<div>
+			<h2>Arkham</h2>
+			<ul>
+				{% for place in arkham_locations %}
+				<li>{{place.name()}}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		<div>
+			<h2>Outer Worlds</h2>
+			<ul>
+				{% for world in outer_worlds %}
+				<li>{{world.name()}}</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="flex-item">
+		<h1>Personaggi e mostri</h1>
+	</div>
+</div>
+{% endblock %}
