@@ -1,10 +1,11 @@
 import os
 import json
 from enum import Enum
+from pydantic import BaseModel, PrivateAttr
 from typing import TypedDict
 from flask import Blueprint, render_template, current_app
 
-from . import location, common, ancient, investigator, monster
+from . import location, ancient, investigator, monster
 
 bp = Blueprint("board", __name__)
 
@@ -20,28 +21,29 @@ class JsonBoard(TypedDict):
     outer_worlds: list[str]
 
 
-class Board:
+class Board(BaseModel):
     GATE_TOKENS: int = 49
+    _terror_level: int = PrivateAttr()
+    _ancient: ancient.Ancient = PrivateAttr()
+    _players: dict[str, investigator.Investigator] = PrivateAttr()
+    _sky: list[monster.Monster] = PrivateAttr()
+    _outskirts: list[monster.Monster] = PrivateAttr()
+    _arkham_locations: list[location.ArkhamLocation] = PrivateAttr()
+    _outer_worlds: list[location.OuterWorldLocation] = PrivateAttr()
 
-    def __init__(self) -> None:
-        self._terror_level: int = 0
-        self._ancient: ancient.Ancient | None = None
-        self._sky: list[monster.Monster] = []
-        self._outskirts: list[monster.Monster] = []
-        self._arkham_locations: list[location.ArkhamLocation] = []
-        self._outer_worlds: list[location.OuterWorldLocation] = []
-
+    def init(self) -> None:
         with open(os.path.join(current_app.config["DATA_PATH"], "board.json"), "r") as j:
             data: JsonBoard = json.load(j)
             for street_name, info in data["arkham"].items():
-                street = location.ArkhamLocation(street_name, True)
+                street = location.ArkhamLocation(
+                    _name=street_name, _street=True)
                 for place_name in info["places"]:
-                    place = location.ArkhamLocation(place_name)
-                    #place.add_link(common.LinksColor.BOTH, street)
-                    #street.add_link(common.LinksColor.NONE, place)
+                    place = location.ArkhamLocation(_name=place_name)
+                    # place.add_link(common.LinksColor.BOTH, street)
+                    # street.add_link(common.LinksColor.NONE, place)
                     self._arkham_locations.append(place)
                 self._arkham_locations.append(street)
-            #for loc in self._arkham_locations:
+            # for loc in self._arkham_locations:
             #    if loc.street:
             #        for link_name, link_color  in info["links"].items():
             #            for other_loc in self._arkham_locations:
@@ -50,7 +52,7 @@ class Board:
             #                    break
             for world_name in data["outer_worlds"]:
                 self._outer_worlds.append(
-                    location.OuterWorldLocation(world_name))
+                    location.OuterWorldLocation(_name=world_name))
 
     def arkham_locations(self) -> list[location.ArkhamLocation]:
         return self._arkham_locations
@@ -73,14 +75,14 @@ class Board:
     def gate_thropies(self) -> int:
         thropies = 0
         for a in self._arkham_locations + self._outer_worlds:
-            for i in a.investigators():
-                thropies += i.gate_thropies()
+            for i in a.investigators:
+                thropies += i.gate_thropies
         return thropies
 
     def elder_signs(self) -> int:
         signs = 0
         for a in self._arkham_locations:
-            signs += 1 if a.elder_sign() else 0
+            signs += 1 if a.elder_sign else 0
         return signs
 
     def victory(self) -> bool:
@@ -130,11 +132,6 @@ class Board:
             "Ye Old Magick Shoppe": self._terror_level < 9
         }
 
-    def encounter(self, investigator: investigator.Investigator, monster: monster.Monster) -> dict[common.SkillCheck, common.Check]:
-        data: dict[common.SkillCheck, common.Check] = {
-            common.SkillCheck.EVADE: common.Check(investigator.evade+monster.awareness, monster.evade_check),
-            common.SkillCheck.HORROR: common.Check(investigator.horror+monster.horror_rating, monster.horror_check),
-        }
 
 @bp.route("/", methods=["GET"])
 def index():

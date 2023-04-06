@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS investigator;
+DROP TABLE IF EXISTS monster;
+DROP TABLE IF EXISTS run_player;

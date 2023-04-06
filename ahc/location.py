@@ -1,7 +1,8 @@
 import copy
+from pydantic import BaseModel, PrivateAttr
 from typing import TypedDict
 
-from . import investigator, monster, common
+from . import investigator, monster
 
 
 class JsonBoardLocation(TypedDict):
@@ -9,15 +10,14 @@ class JsonBoardLocation(TypedDict):
     links: dict[str, str]
 
 
-class ArkhamLocation():
-    def __init__(self, name: str, street: bool = False) -> None:
-        self._name: str = name
-        self._investigators: list[investigator.Investigator] = []
-        self._monsters: list[monster.Monster] = []
-        self._gate: str = ""
-        self._elder_sign: bool = False
-        self._clues: int = 0
-        self._street: bool = street
+class ArkhamLocation(BaseModel):
+    _name: str = PrivateAttr()
+    _investigators: list[investigator.Investigator] = PrivateAttr()
+    _monsters: list[monster.Monster] = PrivateAttr()
+    _gate: str = PrivateAttr()
+    _elder_sign: bool = PrivateAttr()
+    _clues: int = PrivateAttr()
+    _street: bool = PrivateAttr()
 
     @property
     def street(self) -> bool:
@@ -62,11 +62,10 @@ class ArkhamLocation():
             return None
 
 
-class OuterWorldLocation():
-    def __init__(self, name: str) -> None:
-        self._name: str = name
-        self._zone_one: list[investigator.Investigator] = []
-        self._zone_two: list[investigator.Investigator] = []
+class OuterWorldLocation(BaseModel):
+    _name: str = PrivateAttr()
+    _zone_one: list[investigator.Investigator] = PrivateAttr()
+    _zone_two: list[investigator.Investigator] = PrivateAttr()
 
     @property
     def name(self) -> str:
@@ -81,5 +80,6 @@ class OuterWorldLocation():
     def num_investigators(self) -> int:
         return len(self._zone_one) + len(self._zone_two)
 
+    @property
     def investigators(self) -> list[investigator.Investigator]:
         return self._zone_one + self._zone_two

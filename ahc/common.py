@@ -1,16 +1,19 @@
 from dataclasses import dataclass
 from enum import Enum
 
+
 @dataclass
 class Check:
-    dice : int = 0
-    success : int = 0
+    dice: int = 0
+    success: int = 0
+
 
 class SkillCheck(Enum):
     EVADE = "EVADE"
     HORROR = "HORROR"
     COMBAT = "COMBAT"
     SPELL = "SPELL"
+
 
 class LinksColor(Enum):
     NONE = "none"
@@ -22,6 +25,7 @@ class LinksColor(Enum):
 class Signs(Enum):
     MOON = "moon"
     STAR = "star"
+
 
 class Movement(Enum):
     NORMAL = 1
