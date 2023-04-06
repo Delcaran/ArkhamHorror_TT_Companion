@@ -11,3 +11,21 @@ class SkillCheck(Enum):
     HORROR = "HORROR"
     COMBAT = "COMBAT"
     SPELL = "SPELL"
+
+class LinksColor(Enum):
+    NONE = "none"
+    BLACK = "black"
+    WHITE = "white"
+    BOTH = "both"
+
+
+class Signs(Enum):
+    MOON = "moon"
+    STAR = "star"
+
+class Movement(Enum):
+    NORMAL = 1
+    STATIONARY = 2
+    FAST = 3
+    UNIQUE = 4
+    FLYING = 5

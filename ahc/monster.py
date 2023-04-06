@@ -1,22 +1,11 @@
-from enum import Enum
+from . import common
 
-class Movement(Enum):
-    NORMAL = 1
-    STATIONARY = 2
-    FAST = 3
-    UNIQUE = 4
-    FLYING = 5
-
-class Sign(Enum):
-    MOON = 1
-    SQUARE = 2
-    CIRCLE = 3
 
 class Monster:
     def __init__(self) -> None:
         self._name : str = ""
-        self._movement : Movement | None = None
-        self._sign : Sign | None = None
+        self._movement : common.Movement | None = None
+        self._sign : common.Signs | None = None
         self._awareness : int = 0
         self._evade_check : int = 0
         self._horror_rating : int = 0
@@ -31,11 +20,11 @@ class Monster:
         return self._name
 
     @property
-    def movement(self)->Movement:
+    def movement(self)->common.Movement:
         return self._movement
 
     @property
-    def sign(self)->Sign:
+    def sign(self)->common.Signs:
         return self._sign
 
     @property

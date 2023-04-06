@@ -11,7 +11,7 @@ bp = Blueprint("board", __name__)
 
 class MonsterLocation(Enum):
     NORMAL = 1
-    outskirts = 2
+    OUTSKIRTS = 2
     TERROR = 3
 
 
@@ -34,20 +34,20 @@ class Board:
         with open(os.path.join(current_app.config["DATA_PATH"], "board.json"), "r") as j:
             data: JsonBoard = json.load(j)
             for street_name, info in data["arkham"].items():
-                street = location.ArkhamLocation(street_name)
+                street = location.ArkhamLocation(street_name, True)
                 for place_name in info["places"]:
                     place = location.ArkhamLocation(place_name)
-                    place.add_link(location.LinksColor.BOTH, street)
-                    street.add_link(location.LinksColor.NONE, place)
+                    #place.add_link(common.LinksColor.BOTH, street)
+                    #street.add_link(common.LinksColor.NONE, place)
                     self._arkham_locations.append(place)
                 self._arkham_locations.append(street)
-            for loc in self._arkham_locations:
-                if loc.street:
-                    for link_name, link_color  in info["links"].items():
-                        for other_loc in self._arkham_locations:
-                            if other_loc.name == link_name:
-                                loc.add_link(link_color, other_loc)
-                                break
+            #for loc in self._arkham_locations:
+            #    if loc.street:
+            #        for link_name, link_color  in info["links"].items():
+            #            for other_loc in self._arkham_locations:
+            #                if other_loc.name == link_name:
+            #                    loc.add_link(link_color, other_loc)
+            #                    break
             for world_name in data["outer_worlds"]:
                 self._outer_worlds.append(
                     location.OuterWorldLocation(world_name))
