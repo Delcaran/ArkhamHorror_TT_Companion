@@ -5,28 +5,36 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="fixed">
-		<h1>Locations</h1>
-		<div>
-			<h2>Arkham</h2>
-			<ul>
-				{% for place in arkham_locations %}
-				<li>{{place.name()}}</li>
-				{% endfor %}
-			</ul>
-		</div>
-		<div>
-			<h2>Outer Worlds</h2>
-			<ul>
-				{% for world in outer_worlds %}
-				<li>{{world.name()}}</li>
-				{% endfor %}
-			</ul>
-		</div>
+<div style="float:left; width: 50%">
+	<h1>Luoghi</h1>
+	<div>
+		<h2>Arkham</h2>
+		<ul>
+			{% for place in arkham_locations %}
+			{% if place.street() %}
+			<li class="street">{{place.name()}}</li>
+			{% else %}
+			<li>{{place.name()}}</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
 	</div>
-	<div class="flex-item">
-		<h1>Personaggi e mostri</h1>
+	<div>
+		<h2>Mondi Esterni</h2>
+		<ul>
+			{% for world in outer_worlds %}
+			<li>
+				{{world.name()}}
+				<ul>
+					<li>Fase 1</li>
+					<li>Fase 2</li>
+				</ul>
+			</li>
+			{% endfor %}
+		</ul>
 	</div>
+</div>
+<div style="float:right;">
+	<h1>Personaggi e mostri</h1>
 </div>
 {% endblock %}

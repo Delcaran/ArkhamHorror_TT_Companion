@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, current_app
 
 from . import location, common, ancient, investigator, monster
 
-bp = Blueprint("board", __name__, url_prefix="/board")
+bp = Blueprint("board", __name__)
 
 
 class MonsterLocation(Enum):
@@ -37,11 +37,17 @@ class Board:
                 street = location.ArkhamLocation(street_name)
                 for place_name in info["places"]:
                     place = location.ArkhamLocation(place_name)
-                    # TODO: add links to place->street
-                    # TODO: add links to street->places
+                    place.add_link(street)
+                    street.add_link(place)
                     self._arkham_locations.append(place)
-                # TODO: add link street->street
                 self._arkham_locations.append(street)
+            for loc in self._arkham_locations:
+                if loc.street():
+                    for link_name, link_color  in info["links"].items():
+                        for other_loc in self._arkham_locations:
+                            if other_loc.name() == link_name:
+                                loc.add_link(other_loc)
+                                break
             for world_name in data["outer_worlds"]:
                 self._outer_worlds.append(
                     location.OuterWorldLocation(world_name))
@@ -131,7 +137,7 @@ class Board:
         }
 
 @bp.route("/", methods=["GET"])
-def board():
+def index():
     gameboard = Board()
     return render_template(
         "board/main.html",

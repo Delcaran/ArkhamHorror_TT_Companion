@@ -19,6 +19,9 @@ class ArkhamLocation():
         self._elder_sign : bool = False
         self._clues : int = 0
 
+    def street(self) -> bool:
+        return len(self._links)>1
+
     def name(self) -> str:
         return self._name
 
@@ -33,6 +36,9 @@ class ArkhamLocation():
 
     def elder_sign(self) -> bool:
         return self._elder_sign
+
+    def add_link(self, loc:'ArkhamLocation') -> None:
+        self._links.append(loc)
 
 class OuterWorldLocation():
     def __init__(self, name: str) -> None:
