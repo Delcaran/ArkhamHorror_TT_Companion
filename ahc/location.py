@@ -1,8 +1,15 @@
 import copy
 from typing import TypedDict
+from enum import Enum
 
 from . import investigator, monster
 
+
+class LinksColor(Enum):
+    NONE = "none"
+    BLACK = "black"
+    WHITE = "white"
+    BOTH = "both"
 
 class JsonBoardLocation(TypedDict):
     places: list[str]
@@ -14,31 +21,39 @@ class ArkhamLocation():
         self._name : str = name
         self._investigators : list[investigator.Investigator] = []
         self._monsters : list[monster.Monster] = []
-        self._links : list[ArkhamLocation] = []
+        self._links : dict[LinksColor, list[ArkhamLocation]] = {}
         self._gate : str = ""
         self._elder_sign : bool = False
         self._clues : int = 0
+        self._street : bool = False
 
+    @property
     def street(self) -> bool:
-        return len(self._links)>1
+        return self._street
 
+    @property
     def name(self) -> str:
         return self._name
 
-    def open_gate(self) -> bool:
+    def opened_gate(self) -> bool:
         return len(self._gate) > 0
 
     def num_investigators(self) -> int:
         return len(self._investigators)
 
+    @property
     def investigators(self) -> list[investigator.Investigator]:
         return self._investigators
 
+    @property
     def elder_sign(self) -> bool:
         return self._elder_sign
 
-    def add_link(self, loc:'ArkhamLocation') -> None:
-        self._links.append(loc)
+    def add_link(self, color:LinksColor, loc:'ArkhamLocation') -> None:
+        if color not in self._links.keys():
+            self._links[color] = []
+        self._links[color].append(loc)
+        self._street = len(self._links.keys()) > 1 or len(self._links[color]) > 1
 
 class OuterWorldLocation():
     def __init__(self, name: str) -> None:
@@ -46,6 +61,7 @@ class OuterWorldLocation():
         self._zone_one : list[investigator.Investigator] = []
         self._zone_two : list[investigator.Investigator] = []
 
+    @property
     def name(self) -> str:
         return self._name
 

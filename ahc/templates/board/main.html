@@ -11,10 +11,10 @@
 		<h2>Arkham</h2>
 		<ul>
 			{% for place in arkham_locations %}
-			{% if place.street() %}
-			<li class="street">{{place.name()}}</li>
+			{% if place.street %}
+			<li class="street">{{place.name}}</li>
 			{% else %}
-			<li>{{place.name()}}</li>
+			<li>{{place.name}}</li>
 			{% endif %}
 			{% endfor %}
 		</ul>
@@ -24,7 +24,7 @@
 		<ul>
 			{% for world in outer_worlds %}
 			<li>
-				{{world.name()}}
+				{{world.name}}
 				<ul>
 					<li>Fase 1</li>
 					<li>Fase 2</li>

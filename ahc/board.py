@@ -37,16 +37,16 @@ class Board:
                 street = location.ArkhamLocation(street_name)
                 for place_name in info["places"]:
                     place = location.ArkhamLocation(place_name)
-                    place.add_link(street)
-                    street.add_link(place)
+                    place.add_link(location.LinksColor.BOTH, street)
+                    street.add_link(location.LinksColor.NONE, place)
                     self._arkham_locations.append(place)
                 self._arkham_locations.append(street)
             for loc in self._arkham_locations:
-                if loc.street():
+                if loc.street:
                     for link_name, link_color  in info["links"].items():
                         for other_loc in self._arkham_locations:
-                            if other_loc.name() == link_name:
-                                loc.add_link(other_loc)
+                            if other_loc.name == link_name:
+                                loc.add_link(link_color, other_loc)
                                 break
             for world_name in data["outer_worlds"]:
                 self._outer_worlds.append(
@@ -67,7 +67,7 @@ class Board:
     def open_gates(self) -> int:
         open = 0
         for a in self._arkham_locations:
-            open += 1 if a.open_gate() else 0
+            open += 1 if a.opened_gate() else 0
         return open
 
     def gate_thropies(self) -> int:
