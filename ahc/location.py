@@ -5,12 +5,8 @@ from typing import TypedDict
 from ahc import investigator, monster
 
 
-class JsonBoardLocation(TypedDict):
-    places: list[str]
-    links: dict[str, str]
-
-
 class ArkhamLocation(BaseModel):
+    _id : int = PrivateAttr()
     _name: str = PrivateAttr()
     _investigators: list[investigator.Investigator] = PrivateAttr()
     _monsters: list[monster.Monster] = PrivateAttr()
@@ -19,8 +15,11 @@ class ArkhamLocation(BaseModel):
     _clues: int = PrivateAttr()
     _street: bool = PrivateAttr()
 
-    def __init__(self, **data) -> None:
+    def __init__(self, id:int, name:str, street:bool, **data) -> None:
         super().__init__(**data)
+        self._id = id
+        self._name = name
+        self._street = street
 
     @property
     def street(self) -> bool:
@@ -66,12 +65,15 @@ class ArkhamLocation(BaseModel):
 
 
 class OuterWorldLocation(BaseModel):
+    _id : int = PrivateAttr()
     _name: str = PrivateAttr()
     _zone_one: list[investigator.Investigator] = PrivateAttr()
     _zone_two: list[investigator.Investigator] = PrivateAttr()
 
-    def __init__(self, **data) -> None:
+    def __init__(self, id:int, name:str, **data) -> None:
         super().__init__(**data)
+        self._id = id
+        self._name = name
 
     @property
     def name(self) -> str:

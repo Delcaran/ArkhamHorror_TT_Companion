@@ -3,9 +3,9 @@ import json
 from enum import Enum
 from pydantic import BaseModel, PrivateAttr
 from typing import TypedDict
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, g
 
-from ahc import location, ancient, investigator, monster
+from ahc import location, ancient, investigator, monster, db
 
 bp = Blueprint("board", __name__)
 
@@ -16,75 +16,62 @@ class MonsterLocation(Enum):
     TERROR = 3
 
 
-class JsonBoard(TypedDict):
-    arkham: dict[str, location.JsonBoardLocation]
-    outer_worlds: list[str]
-
-
 class Board(BaseModel):
     GATE_TOKENS: int = 49
+    _db = PrivateAttr()
     _terror_level: int = PrivateAttr()
     _ancient: ancient.Ancient = PrivateAttr()
     _players: dict[str, investigator.Investigator] = PrivateAttr()
     _sky: list[monster.Monster] = PrivateAttr()
     _outskirts: list[monster.Monster] = PrivateAttr()
-    _arkham_locations: list[location.ArkhamLocation] = PrivateAttr()
-    _outer_worlds: list[location.OuterWorldLocation] = PrivateAttr()
+    _arkham_locations: dict[int, location.ArkhamLocation] = PrivateAttr()
+    _outer_worlds: dict[int, location.OuterWorldLocation] = PrivateAttr()
 
     def __init__(self, **data) -> None:
         super().__init__(**data)
-        with open(os.path.join(current_app.config["DATA_PATH"], "board.json"), "r") as j:
-            jsondata: JsonBoard = json.load(j)
-            for street_name, info in jsondata["arkham"].items():
-                street = location.ArkhamLocation(
-                    _name=street_name, _street=True)
-                for place_name in info["places"]:
-                    place = location.ArkhamLocation(_name=place_name)
-                    # place.add_link(common.LinksColor.BOTH, street)
-                    # street.add_link(common.LinksColor.NONE, place)
-                    self._arkham_locations.append(place)
-                self._arkham_locations.append(street)
-            # for loc in self._arkham_locations:
-            #    if loc.street:
-            #        for link_name, link_color  in info["links"].items():
-            #            for other_loc in self._arkham_locations:
-            #                if other_loc.name == link_name:
-            #                    loc.add_link(link_color, other_loc)
-            #                    break
-            for world_name in jsondata["outer_worlds"]:
-                self._outer_worlds.append(
-                    location.OuterWorldLocation(_name=world_name))
+        self._db = db.get_db()
+        self._arkham_locations = {}
+        self._outer_worlds = {}
+        for l in self._db.execute("SELECT * FROM arkham_location").fetchall():
+            self._arkham_locations[l["id"]] = location.ArkhamLocation(id=l["id"], name=l["name"], street=False)
+        for l in self._db.execute("SELECT * FROM outer_world").fetchall():
+            self._outer_worlds[l["id"]] = location.OuterWorldLocation(id=l["id"], name=l["name"])
 
     @property
-    def arkham_locations(self) -> list[location.ArkhamLocation]:
+    def arkham_locations(self) -> dict[int, location.ArkhamLocation]:
         return self._arkham_locations
 
     @property
-    def outer_worlds(self) -> list[location.OuterWorldLocation]:
+    def outer_worlds(self) -> dict[int, location.OuterWorldLocation]:
         return self._outer_worlds
 
     def num_investigators(self) -> int:
         n = 0
-        for a in self._arkham_locations + self._outer_worlds:
+        for _, a in self._arkham_locations.items():
+            n += a.num_investigators()
+        for _, a in self._outer_worlds.items():
             n += a.num_investigators()
         return n
 
     def open_gates(self) -> int:
         open = 0
-        for a in self._arkham_locations:
+        for _, a in self._arkham_locations.items():
             open += 1 if a.opened_gate() else 0
         return open
 
     def gate_thropies(self) -> int:
         thropies = 0
-        for a in self._arkham_locations + self._outer_worlds:
+        for _, a in self._arkham_locations.items():
+            for i in a.investigators:
+                thropies += i.gate_thropies
+        for _, a in self._outer_worlds.items():
             for i in a.investigators:
                 thropies += i.gate_thropies
         return thropies
 
     def elder_signs(self) -> int:
         signs = 0
-        for a in self._arkham_locations:
+        for _, a in self._arkham_locations.items():
             signs += 1 if a.elder_sign else 0
         return signs
 

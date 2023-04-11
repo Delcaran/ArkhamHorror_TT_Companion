@@ -10,7 +10,7 @@
 	<div>
 		<h2>Arkham</h2>
 		<ul>
-			{% for place in arkham_locations %}
+			{% for id, place in arkham_locations.items() %}
 			{% if place.street %}
 			<li class="street">{{place.name}}</li>
 			{% else %}
@@ -22,7 +22,7 @@
 	<div>
 		<h2>Mondi Esterni</h2>
 		<ul>
-			{% for world in outer_worlds %}
+			{% for id, world in outer_worlds.items() %}
 			<li>
 				{{world.name}}
 				<ul>
