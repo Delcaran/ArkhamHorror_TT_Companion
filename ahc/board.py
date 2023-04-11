@@ -5,7 +5,7 @@ from pydantic import BaseModel, PrivateAttr
 from typing import TypedDict
 from flask import Blueprint, render_template, current_app
 
-from . import location, ancient, investigator, monster
+from ahc import location, ancient, investigator, monster
 
 bp = Blueprint("board", __name__)
 
@@ -31,10 +31,11 @@ class Board(BaseModel):
     _arkham_locations: list[location.ArkhamLocation] = PrivateAttr()
     _outer_worlds: list[location.OuterWorldLocation] = PrivateAttr()
 
-    def init(self) -> None:
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
         with open(os.path.join(current_app.config["DATA_PATH"], "board.json"), "r") as j:
-            data: JsonBoard = json.load(j)
-            for street_name, info in data["arkham"].items():
+            jsondata: JsonBoard = json.load(j)
+            for street_name, info in jsondata["arkham"].items():
                 street = location.ArkhamLocation(
                     _name=street_name, _street=True)
                 for place_name in info["places"]:
@@ -50,13 +51,15 @@ class Board(BaseModel):
             #                if other_loc.name == link_name:
             #                    loc.add_link(link_color, other_loc)
             #                    break
-            for world_name in data["outer_worlds"]:
+            for world_name in jsondata["outer_worlds"]:
                 self._outer_worlds.append(
                     location.OuterWorldLocation(_name=world_name))
 
+    @property
     def arkham_locations(self) -> list[location.ArkhamLocation]:
         return self._arkham_locations
 
+    @property
     def outer_worlds(self) -> list[location.OuterWorldLocation]:
         return self._outer_worlds
 
@@ -94,22 +97,22 @@ class Board(BaseModel):
         else:
             return False
 
-    def ancient_awakes(self) -> bool:
-        if self._ancient.doom_track_full():
-            return True
-        else:
-            num_investigators = self.num_investigators()
-            open_gates = self.open_gates()
-            if num_investigators == 1 or num_investigators == 2:
-                return open_gates == 8
-            elif num_investigators == 3 or num_investigators == 4:
-                return open_gates == 7
-            elif num_investigators == 5 or num_investigators == 6:
-                return open_gates == 6
-            elif num_investigators == 7 or num_investigators == 8:
-                return open_gates == 5
-            else:
-                return Board.GATE_TOKENS == (open_gates + self.gate_thropies())
+    #def ancient_awakes(self) -> bool:
+    #    if self._ancient.doom_track_full():
+    #        return True
+    #    else:
+    #        num_investigators = self.num_investigators()
+    #        open_gates = self.open_gates()
+    #        if num_investigators == 1 or num_investigators == 2:
+    #            return open_gates == 8
+    #        elif num_investigators == 3 or num_investigators == 4:
+    #            return open_gates == 7
+    #        elif num_investigators == 5 or num_investigators == 6:
+    #            return open_gates == 6
+    #        elif num_investigators == 7 or num_investigators == 8:
+    #            return open_gates == 5
+    #        else:
+    #            return Board.GATE_TOKENS == (open_gates + self.gate_thropies())
 
     # def next_monster_location(self) -> MonsterLocation:
     #    if self._terror_level < 10:
@@ -138,6 +141,6 @@ def index():
     gameboard = Board()
     return render_template(
         "board/main.html",
-        arkham_locations=gameboard.arkham_locations(),
-        outer_worlds=gameboard.outer_worlds()
+        arkham_locations=gameboard.arkham_locations,
+        outer_worlds=gameboard.outer_worlds
     )

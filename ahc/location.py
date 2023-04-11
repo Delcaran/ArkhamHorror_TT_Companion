@@ -2,7 +2,7 @@ import copy
 from pydantic import BaseModel, PrivateAttr
 from typing import TypedDict
 
-from . import investigator, monster
+from ahc import investigator, monster
 
 
 class JsonBoardLocation(TypedDict):
@@ -18,6 +18,9 @@ class ArkhamLocation(BaseModel):
     _elder_sign: bool = PrivateAttr()
     _clues: int = PrivateAttr()
     _street: bool = PrivateAttr()
+
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
 
     @property
     def street(self) -> bool:
@@ -66,6 +69,9 @@ class OuterWorldLocation(BaseModel):
     _name: str = PrivateAttr()
     _zone_one: list[investigator.Investigator] = PrivateAttr()
     _zone_two: list[investigator.Investigator] = PrivateAttr()
+
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
 
     @property
     def name(self) -> str:

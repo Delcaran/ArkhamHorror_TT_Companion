@@ -1,6 +1,6 @@
 from pydantic import BaseModel, PrivateAttr
 
-from . import common
+from ahc import common
 
 
 class Monster(BaseModel):
@@ -15,6 +15,9 @@ class Monster(BaseModel):
     _combat_rating: int = PrivateAttr()
     _toughness: int = PrivateAttr()
     _combat_damage: int = PrivateAttr()
+
+    def __init__(self, **data) -> None:
+        super().__init__(**data)
 
     @property
     def name(self) -> str:

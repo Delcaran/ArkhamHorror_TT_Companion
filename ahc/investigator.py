@@ -12,7 +12,8 @@ class Statistic(BaseModel):
     _default: int = PrivateAttr()
     _max: int = PrivateAttr()
 
-    def init(self, max: int = 0) -> None:
+    def __init__(self, max:int=0, **data) -> None:
+        super().__init__(**data)
         self._current: int = 0
         self._bonus: int = 0
         self._default: int = max
@@ -66,7 +67,8 @@ class Skill(BaseModel):
     def min(self) -> int:
         return self._min
 
-    def init(self, value: int, min: int = 0, max: int = 0) -> int:
+    def __init__(self, value: int=0, min: int = 0, max: int = 0, **data) -> None:
+        super().__init__(**data)
         self._min: int = min
         self._max: int = max
         # TODO: remove when real data
@@ -77,7 +79,6 @@ class Skill(BaseModel):
             self._current = value
         else:
             self._current = self._min + ((self._max - self._min) // 2) + 1
-        return self.get()
 
     def increase(self, value: int = 1) -> int:
         tmp = self._current + value
@@ -142,22 +143,23 @@ class Investigator(BaseModel):
     _elder_sign_played: int = PrivateAttr()
     _elder_sign_owned: int = PrivateAttr()
 
-    def init(self, name: str, data: JsonInvestigator) -> None:
+    def __init__(self, name: str, jsondata: JsonInvestigator, **data) -> None:
+        super().__init__(**data)
         self._name = name
-        self._occupation = data["occupation"]
-        self._home = data["home"]
-        self._stamina = Statistic(_max=data["stamina"])
-        self._sanity = Statistic(_max=data["sanity"])
-        self._focus = Statistic(_max=data["focus"])
+        self._occupation = jsondata["occupation"]
+        self._home = jsondata["home"]
+        self._stamina = Statistic(_max=jsondata["stamina"])
+        self._sanity = Statistic(_max=jsondata["sanity"])
+        self._focus = Statistic(_max=jsondata["focus"])
         self._speed = Skill(
-            _min=data["speed"]["min"], _max=data["speed"]["max"])
+            _min=jsondata["speed"]["min"], _max=jsondata["speed"]["max"])
         self._sneak = Skill(
-            _min=data["sneak"]["min"], _max=data["sneak"]["max"])
+            _min=jsondata["sneak"]["min"], _max=jsondata["sneak"]["max"])
         self._fight = Skill(
-            _min=data["fight"]["min"], _max=data["fight"]["max"])
-        self._will = Skill(_min=data["will"]["min"], _max=data["will"]["max"])
-        self._lore = Skill(_min=data["lore"]["min"], _max=data["lore"]["max"])
-        self._luck = Skill(_min=data["luck"]["min"], _max=data["luck"]["max"])
+            _min=jsondata["fight"]["min"], _max=jsondata["fight"]["max"])
+        self._will = Skill(_min=jsondata["will"]["min"], _max=jsondata["will"]["max"])
+        self._lore = Skill(_min=jsondata["lore"]["min"], _max=jsondata["lore"]["max"])
+        self._luck = Skill(_min=jsondata["luck"]["min"], _max=jsondata["luck"]["max"])
 
     @property
     def evade(self) -> int:
