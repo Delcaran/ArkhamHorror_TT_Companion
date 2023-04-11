@@ -19,6 +19,21 @@
 			],
 			"jinja": true,
 			"justMyCode": true
+		},
+		{
+			"name": "Init DB",
+			"type": "python",
+			"request": "launch",
+			"module": "flask",
+			"env": {
+				"FLASK_APP": "ahc",
+				"FLASK_DEBUG": "1"
+			},
+			"args": [
+				"init-db"
+			],
+			"jinja": true,
+			"justMyCode": true
 		}
 	]
 }

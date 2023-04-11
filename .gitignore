@@ -1,14 +1,13 @@
-.venv/
-
 *.pyc
-__pycache__/
 
-instance/
-
-.pytest_cache/
+ahc.sqlite
 .coverage
-htmlcov/
 
+.venv/
+__pycache__/
+instance/
+.pytest_cache/
+htmlcov/
 dist/
 build/
 *.egg-info/
