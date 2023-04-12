@@ -1,3 +1,21 @@
 .street {
-    font-weight: 600;
+    font-weight: bold;
+}
+.stat {
+    font-weight: bold;
+}
+.stamina {
+    color: red;
+}
+.sanity {
+    color: blue;
+}
+.skill .top {
+    color: red;
+}
+.skill .bottom {
+    color: blue;
+}
+nav {
+    overflow: hidden;
 }

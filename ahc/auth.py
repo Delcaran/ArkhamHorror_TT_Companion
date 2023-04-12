@@ -23,12 +23,13 @@ def login():
                 "SELECT * FROM player WHERE name = ?", (playername,)).fetchone()
             session.clear()
             session['player_id'] = player['id']
+            session['investigator_id'] = investigator_id
             return redirect(url_for('index'))
 
         flash(error)
 
     available_investigators = db.execute(
-        "SELECT id, name FROM investigator WHERE id NOT IN (SELECT investigator_id FROM player)").fetchall()
+        "SELECT id, name FROM investigator_card WHERE id NOT IN (SELECT investigator_id FROM player)").fetchall()
 
     return render_template('auth/login.html', investigators=available_investigators)
 
@@ -36,20 +37,32 @@ def login():
 @bp.before_app_request
 def load_logged_in_player():
     player_id = session.get('player_id')
+    investigator_id = session.get("investigator_id")
 
     if player_id is None:
         g.player = None
+        g.investigator_card = None
     else:
         g.player = get_db().execute(
             'SELECT * FROM player WHERE id = ?', (player_id,)
         ).fetchone()
-        g.investigator = get_db().execute(
-            'SELECT * FROM investigator WHERE id = ?', (g.player["id"],)
+        g.investigator_card = get_db().execute(
+            'SELECT * FROM investigator_card WHERE id = ?', (investigator_id,)
         ).fetchone()
 
 
 @bp.route('/logout')
 def logout():
+    player_id = session.get('player_id')
+    investigator_id = session.get("investigator_id")
+    if player_id is not None:
+        db = get_db()
+        db.execute("DELETE FROM investigator WHERE investigator_id = ? AND player_id = ?", (investigator_id, player_id,))
+        db.commit()
+        db.execute("DELETE FROM player WHERE id = ?", (player_id,))
+        db.commit()
+        g.player = None
+        g.investigator_card = None
     session.clear()
     return redirect(url_for('index'))
 

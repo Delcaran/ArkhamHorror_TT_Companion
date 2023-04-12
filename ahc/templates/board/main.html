@@ -5,36 +5,64 @@
 {% endblock %}
 
 {% block content %}
-<div style="float:left; width: 50%">
-	<h1>Luoghi</h1>
-	<div>
-		<h2>Arkham</h2>
-		<ul>
-			{% for id, place in arkham_locations.items() %}
-			{% if place.street %}
-			<li class="street">{{place.name}}</li>
-			{% else %}
-			<li>{{place.name}}</li>
-			{% endif %}
-			{% endfor %}
-		</ul>
-	</div>
-	<div>
-		<h2>Mondi Esterni</h2>
-		<ul>
-			{% for id, world in outer_worlds.items() %}
-			<li>
-				{{world.name}}
-				<ul>
-					<li>Fase 1</li>
-					<li>Fase 2</li>
-				</ul>
-			</li>
-			{% endfor %}
-		</ul>
-	</div>
+<div style="float:left;">
+	<h1>Tizio Caio</h1>
+	<table style="border-collapse: collapse;">
+		<tr><td>Sanity</td><td>1</td><td>do</td></tr>
+		<tr><td>Stamina</td><td>1</td><td>do</td></tr>
+		<tr><td>Focus</td><td>1</td><td>do</td></tr>
+	</table>
+	<table style="border-collapse: collapse;">
+		<tr><td>Speed</td><td>1</td><td rowspan="2">do</td></tr>
+		<tr><td>Sneak</td><td>5</td></tr>
+		<tr><td>Fight</td><td>1</td><td rowspan="2">do</td></tr>
+		<tr><td>Will</td><td>5</td></tr>
+		<tr><td>Luck</td><td>1</td><td rowspan="2">do</td></tr>
+		<tr><td>Lore</td><td>5</td></tr>
+	</table>
+	<ul>
+		<li>Current location</li>
+		<li>Current status</li>
+	</ul>
+	<table style="border-collapse: collapse;">
+		<tr><td>Object 1</td><td>use</td></tr>
+		<tr><td>Object 2</td><td>use</td></tr>
+		<tr><td>Object 3</td><td>use</td></tr>
+	</table>
 </div>
 <div style="float:right;">
-	<h1>Personaggi e mostri</h1>
+	<div>
+		<h1>Luoghi</h1>
+		<div>
+			<h2>Arkham</h2>
+			<ul>
+				{% for id, place in arkham_locations.items() %}
+				{% if place.street %}
+				<li class="street">{{place.name}}</li>
+				{% else %}
+				<li>{{place.name}}</li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+		<div>
+			<h2>Mondi Esterni</h2>
+			<ul>
+				{% for id, world in outer_worlds.items() %}
+				<li>
+					{{world.name}}
+					<ul>
+						<li>Fase 1</li>
+						<li>Fase 2</li>
+					</ul>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div>
+		<h1>Mostri</h1>
+		<span>Qui confronti i mostri attivi con il personaggio attivo e vedi come te la cavi</span>
+	</div>
 </div>
 {% endblock %}
