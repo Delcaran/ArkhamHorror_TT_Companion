@@ -1,30 +1,33 @@
 from flask import Flask
 from typing import Any
+from peewee import SqliteDatabase
+from werkzeug.serving import is_running_from_reloader
+
+database = SqliteDatabase(':memory:')
 
 
-def create_app(test_config: dict[str, Any] | None = None):
-    from os import path
+def create_app(test_config: dict[str, Any] | None = None) -> Flask:
+    global database
+    #from os import path
+    #app_root = path.dirname(path.abspath(__file__))
 
     app = Flask(__name__)
-    app.config.from_mapping(
-        DATA_PATH=path.join(path.dirname(path.abspath(__file__)), 'data'),
-        SECRET_KEY='dev',
-        #DATABASE=path.join(app.instance_path, 'ahc.sqlite'),
-        DATABASE=path.join(path.dirname(path.abspath(__file__)), 'ahc.sqlite'),
-    )
+    database = SqliteDatabase("ahc.sqlite", pragmas=[('journal_mode', 'wal')])
+    app.config.from_mapping(SECRET_KEY='dev')
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
 
-    from . import db
-    db.init_app(app)
+    if not is_running_from_reloader():
+        from ahc import models
+        models.init_db(database)
 
-    from . import auth
+    from ahc import auth
     app.register_blueprint(auth.bp)
 
-    from . import board
+    from ahc import board
     app.register_blueprint(board.bp)
     app.add_url_rule("/", endpoint="index")
 

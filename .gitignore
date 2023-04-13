@@ -1,6 +1,6 @@
 *.pyc
 
-ahc.sqlite
+ahc.sqlite*
 .coverage
 
 .venv/
