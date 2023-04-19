@@ -105,8 +105,8 @@ def init_locations() -> None:
         ("r'lyeh", True)
     ]
     with database.atomic():
-        Location.insert_many(rows=streets, fields = [Location.name]).execute()
-        Location.insert_many(rows=outer_worlds, fields = [Location.name, Location.outer_world]).execute()
+        Location.insert_many(rows=streets, fields = [Location.name]).on_conflict(action="IGNORE").execute()
+        Location.insert_many(rows=outer_worlds, fields = [Location.name, Location.outer_world]).on_conflict(action="IGNORE").execute()
 
     places = [
         (Location.get(Location.name == "northside"), "train station"),
@@ -163,8 +163,8 @@ def init_locations() -> None:
         (Location.get(Location.name == "southside"), Location.get(Location.name == "french hill"), "black")
     ]
     with database.atomic():
-        Location.insert_many(rows=places, fields=[Location.district, Location.name]).execute()
-        StreetLink.insert_many(rows=links, fields=[StreetLink.street_from, StreetLink.street_to, StreetLink.color]).execute()
+        Location.insert_many(rows=places, fields=[Location.district, Location.name]).on_conflict(action="IGNORE").execute()
+        StreetLink.insert_many(rows=links, fields=[StreetLink.street_from, StreetLink.street_to, StreetLink.color]).on_conflict(action="IGNORE").execute()
 
 
 def init_investigators() -> None:
@@ -181,7 +181,7 @@ def init_investigators() -> None:
             Investigator.stamina,
             Investigator.sanity,
             Investigator.focus
-        ]).execute()
+        ]).on_conflict(action="IGNORE").execute()
 
 
 def init_db(database:pw.SqliteDatabase):

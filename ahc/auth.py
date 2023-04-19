@@ -20,9 +20,8 @@ def login():
         session['investigator_id'] = investigator_id
         return redirect(url_for('index'))
 
-    selected_investigator = Player.select(Player.investigator)
-    available_investigators = db.execute(
-        "SELECT id, name FROM investigator_card WHERE id NOT IN (SELECT investigator_id FROM player)").fetchall()
+    current_players = Player.select(Player.investigator)
+    available_investigators = Investigator.select(Investigator.id, Investigator.name).where(Investigator.id.not_in(current_players))
 
     return render_template('auth/login.html', investigators=available_investigators)
 
