@@ -3,17 +3,18 @@ from typing import Any, Optional
 from peewee import SqliteDatabase
 from werkzeug.serving import is_running_from_reloader
 
-database = SqliteDatabase(':memory:')
+database = SqliteDatabase(':memory:', pragmas={"foreign_keys": 1})
 
 
 def create_app(test_config: Optional[dict[str, Any]] = None) -> Flask:
     global database
-    #from os import path
-    #app_root = path.dirname(path.abspath(__file__))
+    # from os import path
+    # app_root = path.dirname(path.abspath(__file__))
 
     app = Flask(__name__)
-    database = SqliteDatabase("ahc.sqlite", pragmas={"foreign_keys": 1})
     app.config.from_mapping(SECRET_KEY='dev')
+
+    database = SqliteDatabase("ahc.sqlite", pragmas={"foreign_keys": 1})
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)

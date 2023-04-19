@@ -6,29 +6,37 @@
 
 {% block content %}
 <div style="float:left;">
-	<h1>Tizio Caio</h1>
+	{% if g.player %}
+	<h1>{{g.player["investigator"]["name"]}}</h1>
 	<table style="border-collapse: collapse;">
-		<tr><td>Sanity</td><td>1</td><td>do</td></tr>
-		<tr><td>Stamina</td><td>1</td><td>do</td></tr>
-		<tr><td>Focus</td><td>1</td><td>do</td></tr>
+		<tr><td>Sanity</td><td>{{g.player["sanity"]}}</td><td>do</td></tr>
+		<tr><td>Stamina</td><td>{{g.player["stamina"]}}</td><td>do</td></tr>
+		<tr><td>Focus</td><td>{{g.player["focus"]}}</td><td>do</td></tr>
 	</table>
 	<table style="border-collapse: collapse;">
-		<tr><td>Speed</td><td>1</td><td rowspan="2">do</td></tr>
-		<tr><td>Sneak</td><td>5</td></tr>
-		<tr><td>Fight</td><td>1</td><td rowspan="2">do</td></tr>
-		<tr><td>Will</td><td>5</td></tr>
-		<tr><td>Luck</td><td>1</td><td rowspan="2">do</td></tr>
-		<tr><td>Lore</td><td>5</td></tr>
+		<tr><td>Speed</td><td>{{g.player["speed"]}}</td><td rowspan="2">do</td></tr>
+		<tr><td>Sneak</td><td>{{g.player["sneak"]}}</td></tr>
+		<tr><td>Fight</td><td>{{g.player["fight"]}}</td><td rowspan="2">do</td></tr>
+		<tr><td>Will</td><td>{{g.player["will"]}}</td></tr>
+		<tr><td>Luck</td><td>{{g.player["luck"]}}</td><td rowspan="2">do</td></tr>
+		<tr><td>Lore</td><td>{{g.player["lore"]}}</td></tr>
 	</table>
 	<ul>
-		<li>Current location</li>
-		<li>Current status</li>
+		<li>{{g.player["location"]["name"]}}</li>
+		<li>
+			{% if not g.player["lost"] and not g.player["blocked"] %}Normal
+			{% else %}
+			{% if g.player["lost"] %}Lost in time and space{% endif %}
+			{% if g.player["blocked"] %}Blocked{% endif %}
+			{% endif %}
+		</li>
 	</ul>
 	<table style="border-collapse: collapse;">
 		<tr><td>Object 1</td><td>use</td></tr>
 		<tr><td>Object 2</td><td>use</td></tr>
 		<tr><td>Object 3</td><td>use</td></tr>
 	</table>
+	{% endif %}
 </div>
 <div style="float:right;">
 	<div>
@@ -36,12 +44,12 @@
 		<div>
 			<h2>Arkham</h2>
 			<ul>
-				{% for location in locations %}
-				{% if not location["outer_world"] %}
-					{% if not location["district"] %}
-					<li class="street">{{location["name"]}}</li>
+				{% for place in locations %}
+				{% if not place["outer_world"] %}
+					{% if not place["district"] %}
+					<li class="street">{{place["name"]}}</li>
 					{% else %}
-					<li>{{location["name"]}}</li>
+					<li>{{place["name"]}}</li>
 					{% endif %}
 				{% endif %}
 				{% endfor %}
@@ -50,10 +58,10 @@
 		<div>
 			<h2>Mondi Esterni</h2>
 			<ul>
-				{% for location in locations %}
-				{% if location["outer_world"] %}
+				{% for place in locations %}
+				{% if place["outer_world"] %}
 				<li>
-					{{location["name"]}}
+					{{place["name"]}}
 					<ul>
 						<li>Fase 1</li>
 						<li>Fase 2</li>

@@ -12,13 +12,27 @@ def login():
         playername = request.form['playername']
         investigator_id = request.form['investigator_id']
         investigator = Investigator.get_by_id(investigator_id)
-        player = Player.create(name=playername, investigator=investigator, location=investigator.home)
+        player = Player.create(
+            name=playername,
+            investigator=investigator,
+            location=investigator.home,
+            stamina=investigator.stamina,
+            sanity=investigator.sanity,
+            focus=investigator.focus,
+            speed=investigator.speed_min,
+            sneak=investigator.sneak_max,
+            fight=investigator.fight_min,
+            will=investigator.will_max,
+            lore=investigator.lore_min,
+            luck=investigator.luck_max,
+        )
         session.clear()
         session['player_id'] = player.id
         return redirect(url_for('index'))
 
     current_players = Player.select(Player.investigator)
-    available_investigators = Investigator.select(Investigator.id, Investigator.name).where(Investigator.id.not_in(current_players))
+    available_investigators = Investigator.select(
+        Investigator.id, Investigator.name).where(Investigator.id.not_in(current_players))
 
     return render_template('auth/login.html', investigators=available_investigators)
 
@@ -36,6 +50,7 @@ def load_logged_in_player():
 def logout():
     player_id = session.get('player_id')
     if player_id is not None:
+        Player.delete_by_id(player_id)
         g.player = None
         session.clear()
     return redirect(url_for('index'))
