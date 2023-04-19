@@ -36,11 +36,13 @@
 		<div>
 			<h2>Arkham</h2>
 			<ul>
-				{% for id, place in arkham_locations.items() %}
-				{% if place.street %}
-				<li class="street">{{place.name}}</li>
-				{% else %}
-				<li>{{place.name}}</li>
+				{% for location in locations %}
+				{% if not location["outer_world"] %}
+					{% if not location["district"] %}
+					<li class="street">{{location["name"]}}</li>
+					{% else %}
+					<li>{{location["name"]}}</li>
+					{% endif %}
 				{% endif %}
 				{% endfor %}
 			</ul>
@@ -48,14 +50,16 @@
 		<div>
 			<h2>Mondi Esterni</h2>
 			<ul>
-				{% for id, world in outer_worlds.items() %}
+				{% for location in locations %}
+				{% if location["outer_world"] %}
 				<li>
-					{{world.name}}
+					{{location["name"]}}
 					<ul>
 						<li>Fase 1</li>
 						<li>Fase 2</li>
 					</ul>
 				</li>
+				{% endif %}
 				{% endfor %}
 			</ul>
 		</div>

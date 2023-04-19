@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <nav>
     {% if g.player %}
-    <span><a href="{{ url_for('auth.logout') }}">Quit</a> {{ g.investigator_card['name'] }} ({{ g.player['name'] }})</span>
+    <span><a href="{{ url_for('auth.logout') }}">Quit</a> {{ g.player['investigator']["name"] }} ({{ g.player['name'] }})</span>
     {% else %}
     <a href="{{ url_for('auth.login') }}">Join</a>
     {% endif %}
