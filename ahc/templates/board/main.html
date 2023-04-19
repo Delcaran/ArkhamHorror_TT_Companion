@@ -12,12 +12,14 @@
 		<tr>
 			<td>Sanity</td>
 			<td>{{g.player['sanity']}}</td>
-			<td><input id="set_sanity" type="range" min="0" max="{{g.player['investigator']['sanity']}}" value="{{g.player['sanity']}}"></td>
+			<td><a href="/player/{{g.player['id']}}/sanity/damage">Damage</a></td>
+			<td><a href="/player/{{g.player['id']}}/sanity/heal">Heal</a></td>
 		</tr>
 		<tr>
 			<td>Stamina</td>
 			<td>{{g.player['stamina']}}</td>
-			<td><input id="set_stamina" type="range" min="0" max="{{g.player['investigator']['stamina']}}" value="{{g.player['stamina']}}"></td>
+			<td><a href="/player/{{g.player['id']}}/stamina/damage">Damage</a></td>
+			<td><a href="/player/{{g.player['id']}}/stamina/heal">Heal</a></td>
 		</tr>
 		<tr>
 			<td>Focus</td>
@@ -28,33 +30,33 @@
 		<tr>
 			<td>Speed</td>
 			<td>{{g.player['speed']}}</td>
-			<td><a href="/player/speed/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/speed/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Sneak</td>
 			<td>
 			<td>{{g.player['sneak']}}</td>
-			<td><a href="/player/sneak/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/sneak/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Fight</td>
 			<td>{{g.player['fight']}}</td>
-			<td><a href="/player/fight/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/fight/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Will</td>
 			<td>{{g.player['will']}}</td>
-			<td><a href="/player/will/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/will/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Lore</td>
 			<td>{{g.player['lore']}}</td>
-			<td><a href="/player/lore/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/lore/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Luck</td>
 			<td>{{g.player['luck']}}</td>
-			<td><a href="/player/luck/add/{{g.player['id']}}">+</a></td>
+			<td><a href="/player/{{g.player['id']}}/luck/add">+</a></td>
 		</tr>
 	</table>
 	<ul>
