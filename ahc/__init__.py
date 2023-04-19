@@ -30,6 +30,8 @@ def create_app(test_config: Optional[dict[str, Any]] = None) -> Flask:
 
     from ahc import board
     app.register_blueprint(board.bp)
-    app.add_url_rule("/", endpoint="index")
+
+    from ahc import player
+    app.register_blueprint(player.bp)
 
     return app
