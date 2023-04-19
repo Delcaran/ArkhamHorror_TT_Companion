@@ -9,17 +9,53 @@
 	{% if g.player %}
 	<h1>{{g.player["investigator"]["name"]}}</h1>
 	<table style="border-collapse: collapse;">
-		<tr><td>Sanity</td><td>{{g.player["sanity"]}}</td><td>do</td></tr>
-		<tr><td>Stamina</td><td>{{g.player["stamina"]}}</td><td>do</td></tr>
-		<tr><td>Focus</td><td>{{g.player["focus"]}}</td><td>do</td></tr>
+		<tr>
+			<td>Sanity</td>
+			<td>{{g.player['sanity']}}</td>
+			<td><input id="set_sanity" type="range" min="0" max="{{g.player['investigator']['sanity']}}" value="{{g.player['sanity']}}"></td>
+		</tr>
+		<tr>
+			<td>Stamina</td>
+			<td>{{g.player['stamina']}}</td>
+			<td><input id="set_stamina" type="range" min="0" max="{{g.player['investigator']['stamina']}}" value="{{g.player['stamina']}}"></td>
+		</tr>
+		<tr>
+			<td>Focus</td>
+			<td>{{g.player["focus"]}}</td>
+		</tr>
 	</table>
 	<table style="border-collapse: collapse;">
-		<tr><td>Speed</td><td>{{g.player["speed"]}}</td><td rowspan="2">do</td></tr>
-		<tr><td>Sneak</td><td>{{g.player["sneak"]}}</td></tr>
-		<tr><td>Fight</td><td>{{g.player["fight"]}}</td><td rowspan="2">do</td></tr>
-		<tr><td>Will</td><td>{{g.player["will"]}}</td></tr>
-		<tr><td>Luck</td><td>{{g.player["luck"]}}</td><td rowspan="2">do</td></tr>
-		<tr><td>Lore</td><td>{{g.player["lore"]}}</td></tr>
+		<tr>
+			<td>Speed</td>
+			<td>{{g.player['speed']}}</td>
+			<td><input id="set_speed" type="range" min="{{g.player['investigator']['speed_min']}}" max="{{g.player['investigator']['speed_max']}}" value="{{g.player['speed']}}"></td>
+		</tr>
+		<tr>
+			<td>Sneak</td>
+			<td>
+			<td>{{g.player['sneak']}}</td>
+			<td><input id="set_sneak" type="range" min="{{g.player['investigator']['sneak_min']}}" max="{{g.player['investigator']['sneak_max']}}" value="{{g.player['sneak']}}"></td>
+		</tr>
+		<tr>
+			<td>Fight</td>
+			<td>{{g.player['fight']}}</td>
+			<td><input id="set_fight" type="range" min="{{g.player['investigator']['fight_min']}}" max="{{g.player['investigator']['fight_max']}}" value="{{g.player['fight']}}"></td>
+		</tr>
+		<tr>
+			<td>Will</td>
+			<td>{{g.player['will']}}</td>
+			<td><input id="set_will" type="range" min="{{g.player['investigator']['will_min']}}" max="{{g.player['investigator']['will_max']}}" value="{{g.player['will']}}"></td>
+		</tr>
+		<tr>
+			<td>Lore</td>
+			<td>{{g.player['lore']}}</td>
+			<td><input id="set_lore" type="range" min="{{g.player['investigator']['lore_min']}}" max="{{g.player['investigator']['lore_max']}}" value="{{g.player['lore']}}"></td>
+		</tr>
+		<tr>
+			<td>Luck</td>
+			<td>{{g.player['luck']}}</td>
+			<td><input id="set_luck" type="range" min="{{g.player['investigator']['luck_min']}}" max="{{g.player['investigator']['luck_max']}}" value="{{g.player['luck']}}"></td>
+		</tr>
 	</table>
 	<ul>
 		<li>{{g.player["location"]["name"]}}</li>
@@ -32,9 +68,18 @@
 		</li>
 	</ul>
 	<table style="border-collapse: collapse;">
-		<tr><td>Object 1</td><td>use</td></tr>
-		<tr><td>Object 2</td><td>use</td></tr>
-		<tr><td>Object 3</td><td>use</td></tr>
+		<tr>
+			<td>Object 1</td>
+			<td>use</td>
+		</tr>
+		<tr>
+			<td>Object 2</td>
+			<td>use</td>
+		</tr>
+		<tr>
+			<td>Object 3</td>
+			<td>use</td>
+		</tr>
 	</table>
 	{% endif %}
 </div>

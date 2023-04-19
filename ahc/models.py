@@ -43,33 +43,33 @@ class Investigator(BaseModel):
     stamina = pw.SmallIntegerField()
     sanity = pw.SmallIntegerField()
     focus = pw.SmallIntegerField()
-    speed_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    speed_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    sneak_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    sneak_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    fight_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    fight_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    will_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    will_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    lore_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    lore_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    luck_min = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    luck_max = pw.SmallIntegerField(default=0) # TODO: rimuovere
+    speed_min = pw.SmallIntegerField()
+    speed_max = pw.SmallIntegerField()
+    sneak_min = pw.SmallIntegerField()
+    sneak_max = pw.SmallIntegerField()
+    fight_min = pw.SmallIntegerField()
+    fight_max = pw.SmallIntegerField()
+    will_min = pw.SmallIntegerField()
+    will_max = pw.SmallIntegerField()
+    lore_min = pw.SmallIntegerField()
+    lore_max = pw.SmallIntegerField()
+    luck_min = pw.SmallIntegerField()
+    luck_max = pw.SmallIntegerField()
 
 
 class Player(BaseModel):
     name = pw.TextField(unique=True)
     investigator = pw.ForeignKeyField(Investigator, backref='player')
     location = pw.ForeignKeyField(Location, backref='investigators')
-    stamina = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    sanity = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    focus = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    speed = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    sneak = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    fight = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    will = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    lore = pw.SmallIntegerField(default=0) # TODO: rimuovere
-    luck = pw.SmallIntegerField(default=0) # TODO: rimuovere
+    stamina = pw.SmallIntegerField()
+    sanity = pw.SmallIntegerField()
+    focus = pw.SmallIntegerField()
+    speed = pw.SmallIntegerField()
+    sneak = pw.SmallIntegerField()
+    fight = pw.SmallIntegerField()
+    will = pw.SmallIntegerField()
+    lore = pw.SmallIntegerField()
+    luck = pw.SmallIntegerField()
     lost = pw.BooleanField(default=False)
     blocked = pw.BooleanField(default=False)
     clues = pw.SmallIntegerField(default=0)
@@ -170,9 +170,9 @@ def init_locations() -> None:
 
 def init_investigators() -> None:
     investigators = [
-        ("Amanda Sharpe", "student", Location.get(Location.name == "bank of arkham"), 5, 5, 3),
-        ("'Ashcan' Pete", "drifter", Location.get(Location.name == "river docks"), 6, 4, 1),
-        ("Bob Jenkins", "salesman", Location.get(Location.name == "general store"), 4, 6, 1)
+        ("Amanda Sharpe", "student", Location.get(Location.name == "bank of arkham"), 5, 5, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4),
+        ("'Ashcan' Pete", "drifter", Location.get(Location.name == "river docks"), 6, 4, 1, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4),
+        ("Bob Jenkins", "salesman", Location.get(Location.name == "general store"), 4, 6, 1, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4)
     ]
     with database.atomic():
         Investigator.insert_many(rows=investigators,fields=[
@@ -181,7 +181,19 @@ def init_investigators() -> None:
             Investigator.home,
             Investigator.stamina,
             Investigator.sanity,
-            Investigator.focus
+            Investigator.focus,
+            Investigator.speed_min,
+            Investigator.speed_max,
+            Investigator.sneak_min,
+            Investigator.sneak_max,
+            Investigator.fight_min,
+            Investigator.fight_max,
+            Investigator.will_min,
+            Investigator.will_max,
+            Investigator.lore_min,
+            Investigator.lore_max,
+            Investigator.luck_min,
+            Investigator.luck_max
         ]).execute()
 
 def init_db(database:pw.SqliteDatabase):
