@@ -10,9 +10,9 @@
 	<input name="playername" id="playername" required>
 	<label for="investigator_id">Investigator</label>
 	<select name="investigator_id" id="investigator_id" required>
-	{% for i in investigators %}
+		{% for i in investigators %}
 		<option value='{{ i.id }}'>{{ i.name }}</option>
-	{% endfor %}
+		{% endfor %}
 	</select>
 	<input type="submit" value="Log In">
 </form>

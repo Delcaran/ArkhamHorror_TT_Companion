@@ -80,6 +80,30 @@ class Player(BaseModel):
     monster_thropies = pw.SmallIntegerField(default=0)
 
 
+class Object(BaseModel):
+    name = pw.TextField(unique=True)
+    player = pw.ForeignKeyField(Player, backref='players')
+    active = pw.BooleanField(default=False)
+    hands = pw.SmallIntegerField(default=1)
+    speed = pw.SmallIntegerField()
+    sneak = pw.SmallIntegerField()
+    fight = pw.SmallIntegerField()
+    will = pw.SmallIntegerField()
+    lore = pw.SmallIntegerField()
+    luck = pw.SmallIntegerField()
+
+class Spell(BaseModel):
+    name = pw.TextField(unique=True)
+    player = pw.ForeignKeyField(Player, backref='players')
+    lore_check = pw.SmallIntegerField()
+    sanity_damage = pw.SmallIntegerField()
+    speed = pw.SmallIntegerField()
+    sneak = pw.SmallIntegerField()
+    fight = pw.SmallIntegerField()
+    will = pw.SmallIntegerField()
+    lore = pw.SmallIntegerField()
+    luck = pw.SmallIntegerField()
+
 class Board(BaseModel):
     terror_track = pw.SmallIntegerField(default=0)
     max_gates = pw.SmallIntegerField(default=49)
@@ -230,6 +254,8 @@ def init_db(database:pw.SqliteDatabase):
         Monster: init_monsters,
         Investigator: init_investigators,
         Player: None,
+        Spell: None,
+        Object: None,
         Board: None
     }
     database.create_tables(tables.keys())

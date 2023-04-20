@@ -20,7 +20,7 @@ def heal_stat(stat: str, player_id: int):
 def damage_stat(stat: str, player_id: int):
     player: Player = Player.get_by_id(player_id)
     if stat == "stamina" and player.stamina - 1 >= 0:
-            player.update({Player.stamina: player.stamina - 1}).execute()
+        player.update({Player.stamina: player.stamina - 1}).execute()
     elif stat == "sanity" and player.sanity - 1 >= 0:
         player.update({Player.sanity: player.sanity - 1}).execute()
     else:

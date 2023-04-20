@@ -11,7 +11,7 @@ def login():
     if request.method == 'POST':
         playername = request.form['playername']
         investigator_id = request.form['investigator_id']
-        investigator:Investigator = Investigator.get_by_id(investigator_id)
+        investigator: Investigator = Investigator.get_by_id(investigator_id)
         player = Player.create(
             name=playername,
             investigator=investigator,
