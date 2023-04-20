@@ -5,6 +5,16 @@ from typing import Union
 bp = Blueprint("board", __name__)
 
 
+def get_vs_class(player_dice:int, successes:int, health:int, damage:int) -> str:
+    if player_dice < successes:
+        if health > 0:
+            if damage > health:
+                return "fatal"
+            else:
+                return "deadly"
+    return ""
+
+
 @bp.route("/", methods=["GET"])
 def index():
     player : Player = g.player
@@ -17,19 +27,9 @@ def index():
         evade = player.sneak if player else 0 + monster.awareness
         terror = player.will if player else 0 + monster.horror_rating
         combat = player.fight if player else 0 + monster.combat_rating
-        evade_class = ""
-        terror_class = ""
-        combat_class = ""
-        if monster.sanity_damage > player.sanity if player else 0:
-            if terror < monster.horror_check:
-                terror_class = "fatal"
-            else:
-                terror_class = "deadly"
-        if monster.combat_damage > player.stamina if player else 0:
-            if combat < monster.toughness:
-                combat_class = "fatal"
-            else:
-                combat_class = "deadly"
+        evade_class = get_vs_class(evade, monster.evade_check, player.sanity if player else -1, monster.sanity_damage)
+        terror_class = get_vs_class(terror, monster.horror_check, player.sanity if player else -1, monster.sanity_damage)
+        combat_class = get_vs_class(combat, monster.toughness, player.stamina if player else -1, monster.combat_damage)
         vs[monster.id] = {
             "evade": evade,
             "terror": terror,
