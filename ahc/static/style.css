@@ -27,13 +27,9 @@ nav {
 }
 #column1 {
     float: left;
-    width: 30%;
+    width: 40%;
 }
 #column2 {
     float: left;
-    width: 40%;
-}
-#column3 {
-    float: left;
-    width: 30%;
+    width: 60%;
 }
