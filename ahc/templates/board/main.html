@@ -7,65 +7,65 @@
 {% block content %}
 <div id="column1">
 	{% if g.player %}
-	<h1>{{g.player["investigator"]["name"]}}</h1>
+	<h1>{{g.player.investigator.name}}</h1>
 	<table style="border-collapse: collapse;">
 		<tr>
 			<td>Sanity</td>
-			<td>{{g.player['sanity']}}</td>
-			<td><a href="/player/{{g.player['id']}}/sanity/damage">Damage</a></td>
-			<td><a href="/player/{{g.player['id']}}/sanity/heal">Heal</a></td>
+			<td><span class="sanity">{{g.player.sanity}}</span></td>
+			<td><a href="/player/{{g.player.id}}/sanity/damage">Damage</a></td>
+			<td><a href="/player/{{g.player.id}}/sanity/heal">Heal</a></td>
 		</tr>
 		<tr>
 			<td>Stamina</td>
-			<td>{{g.player['stamina']}}</td>
-			<td><a href="/player/{{g.player['id']}}/stamina/damage">Damage</a></td>
-			<td><a href="/player/{{g.player['id']}}/stamina/heal">Heal</a></td>
+			<td><span class="stamina">{{g.player.stamina}}</span></td>
+			<td><a href="/player/{{g.player.id}}/stamina/damage">Damage</a></td>
+			<td><a href="/player/{{g.player.id}}/stamina/heal">Heal</a></td>
 		</tr>
 		<tr>
 			<td>Focus</td>
-			<td>{{g.player["focus"]}}</td>
+			<td>{{g.player.focus}}</td>
 		</tr>
 	</table>
 	<table style="border-collapse: collapse;">
 		<tr>
 			<td>Speed</td>
-			<td>{{g.player['speed']}}</td>
-			<td><a href="/player/{{g.player['id']}}/speed/add">+</a></td>
+			<td>{{g.player.speed}}</td>
+			<td><a href="/player/{{g.player.id}}/speed/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Sneak</td>
 			<td>
-			<td>{{g.player['sneak']}}</td>
-			<td><a href="/player/{{g.player['id']}}/sneak/add">+</a></td>
+			<td>{{g.player.sneak}}</td>
+			<td><a href="/player/{{g.player.id}}/sneak/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Fight</td>
-			<td>{{g.player['fight']}}</td>
-			<td><a href="/player/{{g.player['id']}}/fight/add">+</a></td>
+			<td>{{g.player.fight}}</td>
+			<td><a href="/player/{{g.player.id}}/fight/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Will</td>
-			<td>{{g.player['will']}}</td>
-			<td><a href="/player/{{g.player['id']}}/will/add">+</a></td>
+			<td>{{g.player.will}}</td>
+			<td><a href="/player/{{g.player.id}}/will/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Lore</td>
-			<td>{{g.player['lore']}}</td>
-			<td><a href="/player/{{g.player['id']}}/lore/add">+</a></td>
+			<td>{{g.player.lore}}</td>
+			<td><a href="/player/{{g.player.id}}/lore/add">+</a></td>
 		</tr>
 		<tr>
 			<td>Luck</td>
-			<td>{{g.player['luck']}}</td>
-			<td><a href="/player/{{g.player['id']}}/luck/add">+</a></td>
+			<td>{{g.player.luck}}</td>
+			<td><a href="/player/{{g.player.id}}/luck/add">+</a></td>
 		</tr>
 	</table>
 	<ul>
-		<li>{{g.player["location"]["name"]}}</li>
+		<li>{{g.player.location.name}}</li>
 		<li>
-			{% if not g.player["lost"] and not g.player["blocked"] %}Normal
+			{% if not g.player.lost and not g.player.blocked %}Normal
 			{% else %}
-			{% if g.player["lost"] %}Lost in time and space{% endif %}
-			{% if g.player["blocked"] %}Blocked{% endif %}
+			{% if g.player.lost %}Lost in time and space{% endif %}
+			{% if g.player.blocked %}Blocked{% endif %}
 			{% endif %}
 		</li>
 	</ul>
@@ -97,11 +97,11 @@
 		</tr>
 		{% for monster in monsters %}
 		<tr>
-			<td>{{monster["name"]}}</td>
-			<td>{{monster["location"]["name"]}}</td>
-			<td>{{vs[monster["id"]]["evade"]}}({{monster["evade_check"]}})</td>
-			<td>{{vs[monster["id"]]["terror"]}}({{monster["horror_check"]}}) [{{monster["sanity_damage"]}}]</td>
-			<td>{{vs[monster["id"]]["combat"]}}({{monster["toughness"]}}) [{{monster["combat_damage"]}}]</td>
+			<td>{{monster.name}}</td>
+			<td>{{monster.location.name}}</td>
+			<td><span class="{{vs[monster.id].evade_class}}">{{vs[monster.id].evade}}({{monster.evade_check}})</span></td>
+			<td><span class="{{vs[monster.id].terror_class}}">{{vs[monster.id].terror}}({{monster.horror_check}}) [{{monster.sanity_damage}}]</span></td>
+			<td><span class="{{vs[monster.id].combat_class}}">{{vs[monster.id].combat}}({{monster.toughness}}) [{{monster.combat_damage}}]</span></td>
 		</tr>
 		{% endfor %}
 	</table>
@@ -112,11 +112,11 @@
 		<h2>Arkham</h2>
 		<ul>
 			{% for place in locations %}
-			{% if not place["outer_world"] %}
-				{% if not place["district"] %}
-				<li class="street">{{place["name"]}}</li>
+			{% if not place.outer_world %}
+				{% if not place.district %}
+				<li class="street">{{place.name}}</li>
 				{% else %}
-				<li>{{place["name"]}}</li>
+				<li>{{place.name}}</li>
 				{% endif %}
 			{% endif %}
 			{% endfor %}
@@ -126,9 +126,9 @@
 		<h2>Mondi Esterni</h2>
 		<ul>
 			{% for place in locations %}
-			{% if place["outer_world"] %}
+			{% if place.outer_world %}
 			<li>
-				{{place["name"]}}
+				{{place.name}}
 				<ul>
 					<li>Fase 1</li>
 					<li>Fase 2</li>

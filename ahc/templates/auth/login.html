@@ -11,7 +11,7 @@
 	<label for="investigator_id">Investigator</label>
 	<select name="investigator_id" id="investigator_id" required>
 	{% for i in investigators %}
-		<option value='{{ i["id"] }}'>{{ i["name"] }}</option>
+		<option value='{{ i.id }}'>{{ i.name }}</option>
 	{% endfor %}
 	</select>
 	<input type="submit" value="Log In">

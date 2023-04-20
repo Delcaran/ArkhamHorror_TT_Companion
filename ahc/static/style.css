@@ -10,11 +10,11 @@
 .sanity {
     color: blue;
 }
-.skill .top {
+.fatal {
     color: red;
 }
-.skill .bottom {
-    color: blue;
+.deadly {
+    color: gold;
 }
 nav {
     overflow: hidden;
