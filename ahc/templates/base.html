@@ -16,7 +16,7 @@
     {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
     {% endfor %}
-    <div style="width: 100%;"></div>
+    <div id="boxes"></div>
     {% block content %}{% endblock %}
     </div>
     <div style="clear:both"></div>

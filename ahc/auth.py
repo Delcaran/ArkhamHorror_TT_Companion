@@ -11,7 +11,7 @@ def login():
     if request.method == 'POST':
         playername = request.form['playername']
         investigator_id = request.form['investigator_id']
-        investigator = Investigator.get_by_id(investigator_id)
+        investigator:Investigator = Investigator.get_by_id(investigator_id)
         player = Player.create(
             name=playername,
             investigator=investigator,
@@ -28,7 +28,7 @@ def login():
         )
         session.clear()
         session['player_id'] = player.id
-        return redirect(url_for('index'))
+        return redirect(url_for('board.index'))
 
     current_players = Player.select(Player.investigator)
     available_investigators = Investigator.select(

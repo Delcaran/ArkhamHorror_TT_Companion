@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div style="float:left;">
+<div id="column1">
 	{% if g.player %}
 	<h1>{{g.player["investigator"]["name"]}}</h1>
 	<table style="border-collapse: collapse;">
@@ -85,43 +85,58 @@
 	</table>
 	{% endif %}
 </div>
-<div style="float:right;">
+<div id="column2">
+	<h1>Mostri</h1>
+	<table>
+		<tr>
+			<th>Mostro</th>
+			<th>Luogo</th>
+			<th>Fuga</th>
+			<th>Terrore [danno]</th>
+			<th>Lotta [danno]</th>
+		</tr>
+		{% for monster in monsters %}
+		<tr>
+			<td>{{monster["name"]}}</td>
+			<td>{{monster["location"]["name"]}}</td>
+			<td>{{vs[monster["id"]]["evade"]}}({{monster["evade_check"]}})</td>
+			<td>{{vs[monster["id"]]["terror"]}}({{monster["horror_check"]}}) [{{monster["sanity_damage"]}}]</td>
+			<td>{{vs[monster["id"]]["combat"]}}({{monster["toughness"]}}) [{{monster["combat_damage"]}}]</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<div id="column3">
+	<h1>Luoghi</h1>
 	<div>
-		<h1>Luoghi</h1>
-		<div>
-			<h2>Arkham</h2>
-			<ul>
-				{% for place in locations %}
-				{% if not place["outer_world"] %}
-					{% if not place["district"] %}
-					<li class="street">{{place["name"]}}</li>
-					{% else %}
-					<li>{{place["name"]}}</li>
-					{% endif %}
+		<h2>Arkham</h2>
+		<ul>
+			{% for place in locations %}
+			{% if not place["outer_world"] %}
+				{% if not place["district"] %}
+				<li class="street">{{place["name"]}}</li>
+				{% else %}
+				<li>{{place["name"]}}</li>
 				{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
-		<div>
-			<h2>Mondi Esterni</h2>
-			<ul>
-				{% for place in locations %}
-				{% if place["outer_world"] %}
-				<li>
-					{{place["name"]}}
-					<ul>
-						<li>Fase 1</li>
-						<li>Fase 2</li>
-					</ul>
-				</li>
-				{% endif %}
-				{% endfor %}
-			</ul>
-		</div>
+			{% endif %}
+			{% endfor %}
+		</ul>
 	</div>
 	<div>
-		<h1>Mostri</h1>
-		<span>Qui confronti i mostri attivi con il personaggio attivo e vedi come te la cavi</span>
+		<h2>Mondi Esterni</h2>
+		<ul>
+			{% for place in locations %}
+			{% if place["outer_world"] %}
+			<li>
+				{{place["name"]}}
+				<ul>
+					<li>Fase 1</li>
+					<li>Fase 2</li>
+				</ul>
+			</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
 	</div>
 </div>
 {% endblock %}
