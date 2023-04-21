@@ -22,20 +22,24 @@ class StreetLink(BaseModel):
     color = pw.TextField()
 
 
+class Dimension(BaseModel):
+    name = pw.TextField(unique=True)
+
 class Monster(BaseModel):
     name = pw.TextField(unique=True)
     location = pw.ForeignKeyField(Location, null=True, backref='monsters')
-    sign = pw.TextField()
+    dimension = pw.ForeignKeyField(Dimension, backref="monsters")
     awareness = pw.SmallIntegerField()
-    evade_check = pw.SmallIntegerField()
+    evade_check = pw.SmallIntegerField(default=1)
     horror_rating = pw.SmallIntegerField()
-    horror_check = pw.SmallIntegerField()
+    horror_check = pw.SmallIntegerField(default=1)
     sanity_damage = pw.SmallIntegerField()
     combat_rating = pw.SmallIntegerField()
     toughness = pw.SmallIntegerField()
     combat_damage = pw.SmallIntegerField()
     sky = pw.BooleanField(default=False)
     outskirts = pw.BooleanField(default=False)
+    mask = pw.BooleanField(default=False)
 
 
 class Investigator(BaseModel):
@@ -232,8 +236,7 @@ def init_monsters() -> None:
     with database.atomic():
         Monster.insert_many(rows=monsters,fields=[
             Monster.name,
-            Monster.sign,
-            Monster.location, # TODO: rimuovere alla fine dei test
+            Monster.dimension,
             Monster.awareness,
             Monster.evade_check,
             Monster.horror_rating,

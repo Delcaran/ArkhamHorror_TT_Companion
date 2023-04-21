@@ -30,8 +30,8 @@ def index():
         evade_class = get_vs_class(
             evade, 
             monster.evade_check, 
-            player.sanity if player else -1, 
-            monster.sanity_damage)
+            player.stamina if player else -1, 
+            monster.combat_damage)
         terror_class = get_vs_class(
             terror, 
             monster.horror_check, 

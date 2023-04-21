@@ -81,15 +81,15 @@
 	<table>
 		<tr>
 			<th>Mostro</th>
-			<th>Fuga</th>
 			<th>Terrore</th>
+			<th>Fuga</th>
 			<th>Lotta</th>
 		</tr>
 		{% for monster in monsters %}
 		<tr>
 			<td>{{monster.name}}</td>
-			<td><span class="{{vs[monster.id].evade_class}}">{{vs[monster.id].evade}}({{monster.evade_check}}) &lt;{{monster.sanity_damage}}&gt;</span></td>
 			<td><span class="{{vs[monster.id].terror_class}}">{{vs[monster.id].terror}}({{monster.horror_check}}) &lt;{{monster.sanity_damage}}&gt;</span></td>
+			<td><span class="{{vs[monster.id].evade_class}}">{{vs[monster.id].evade}}({{monster.evade_check}}) &lt;{{monster.sanity_damage}}&gt;</span></td>
 			<td><span class="{{vs[monster.id].combat_class}}">{{vs[monster.id].combat}}({{monster.toughness}}) &lt;{{monster.combat_damage}}&gt;</span></td>
 		</tr>
 		{% endfor %}
