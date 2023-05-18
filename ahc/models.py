@@ -227,16 +227,25 @@ def init_investigators() -> None:
         ]).execute()
 
 def init_monsters() -> None:
+    dimensions = [
+        ("televisione",),
+        ("ovunque",),
+        ("giermania",),
+        ("tu nonnah",)
+    ]
+    with database.atomic():
+        Dimension.insert_many(rows=dimensions,fields=[Dimension.name]).execute()
     monsters = [
-        ("Pippobbaudo", "televisione", Location.get(Location.name == "newspaper"), -1, 2, -1, 2, 1, -2, 1, 2, True, False),
-        ("Fracchia la belva umana", "ovunque", Location.get(Location.name == "river docks"), -2, 3, -2, 3, 2, -3, 2, 3, False, False),
-        ("Lospread", "giermania", Location.get(Location.name == "train station"), -3, 4, -3, 4, 3, -4, 3, 4, False, True),
-        ("Lasfiga", "tu nonnah", None, -3, 4, -3, 4, 3, -4, 3, 4, False, False)
+        ("Pippobbaudo", Dimension.get(Dimension.name == "televisione"), Location.get(Location.name == "newspaper"), -1, 2, -1, 2, 1, -2, 1, 2, True, False),
+        ("Fracchia la belva umana", Dimension.get(Dimension.name == "ovunque"), Location.get(Location.name == "river docks"), -2, 3, -2, 3, 2, -3, 2, 3, False, False),
+        ("Lospread", Dimension.get(Dimension.name == "giermania"), Location.get(Location.name == "train station"), -3, 4, -3, 4, 3, -4, 3, 4, False, True),
+        ("Lasfiga", Dimension.get(Dimension.name == "tu nonnah"), None, -3, 4, -3, 4, 3, -4, 3, 4, False, False)
     ]
     with database.atomic():
         Monster.insert_many(rows=monsters,fields=[
             Monster.name,
             Monster.dimension,
+            Monster.location,
             Monster.awareness,
             Monster.evade_check,
             Monster.horror_rating,
@@ -254,6 +263,7 @@ def init_db(database:pw.SqliteDatabase):
     tables : dict[BaseModel, Optional[callable]] = {
         Location: init_locations,
         StreetLink: None,
+        Dimension: None,
         Monster: init_monsters,
         Investigator: init_investigators,
         Player: None,
